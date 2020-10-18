@@ -1,0 +1,36 @@
+# An example of ClusterConfig object compatible with the "app-dev" quickstart
+# profile. See also: https://github.com/weaveworks/eks-quickstart-app-dev
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: cluster-test-1
+  region: eu-central-1
+  version: "1.17"
+
+nodeGroups:
+  - name: ng-1
+    instanceType: m5.large
+    desiredCapacity: 1
+    iam:
+      withAddonPolicies:
+        albIngress: true
+        autoScaler: true
+        cloudWatch: true
+    ssh:
+      publicKeyPath: "KeyPair_ec2_gitops"
+
+git:
+  repo:
+    url: "git@github.com:filippo82/eks-gitops-test1.git"
+    branch: main
+    fluxPath: "flux/"
+    user: "gitops"
+    email: "filippo82@users.noreply.github.com"
+  operator:
+    namespace: "flux"
+    withHelm: true
+  bootstrapProfile:
+    source: app-dev
+    revision: master
